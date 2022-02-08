@@ -1,4 +1,4 @@
-*Psychological search service*
+##Psychological search service##
 
 This system is an online application designed for people in 
 need of psychological help, as well as for therapists to find 

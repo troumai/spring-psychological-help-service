@@ -1,7 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
 import lombok.*;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Scope(value = "singleton")
 public class Therapist {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +45,16 @@ public class Therapist {
 //        therapySession.setTherapist(this);
 //        therapySessionList.add(therapySession);
 //    }
+
+    @PostConstruct
+    public void doInit(){
+        System.out.println("----------Therapist bean init-------------");
+    }
+
+    @PreDestroy
+    public void doDestroy(){
+        System.out.println("----------Therapist bean destroy-------------");
+    }
 
     public static List<Therapist> getTherapists(){
         Therapist therapist1 = Therapist.builder()

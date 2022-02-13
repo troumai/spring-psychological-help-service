@@ -1,7 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
 import lombok.*;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Scope(value = "singleton")
 public class Client{
     private Long id;
     private String firstName;
@@ -20,6 +24,16 @@ public class Client{
     private String city;
     private int age;
     private String sex;
+
+    @PostConstruct
+    public void doInit(){
+        System.out.println("----------Client bean init-------------");
+    }
+
+    @PreDestroy
+    public void doDestroy(){
+        System.out.println("----------Client bean destroy-------------");
+    }
 
     public static List<Client> getClients(){
         Client client1 = Client.builder()

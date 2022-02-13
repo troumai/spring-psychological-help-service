@@ -1,7 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
 import lombok.*;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Scope(value="singleton")
 public class Specialization {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +26,25 @@ public class Specialization {
 //    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Therapist> therapists;
 
-    public Specialization(String name) {
-        this.name = name;
-//        therapists = new ArrayList<>();
-    }
+//    public Specialization(String name) {
+//        this.name = name;
+////        therapists = new ArrayList<>();
+//    }
 
 //    public void addTherapist(Therapist therapist){
 //        therapist.setSpecialization(this);
 //        therapists.add(therapist);
 //    }
+
+    @PostConstruct
+    public void doInit(){
+        System.out.println("----------Specialization bean init-------------");
+    }
+
+    @PreDestroy
+    public void doDestroy(){
+        System.out.println("----------Specialization bean destroy-------------");
+    }
 
     public static List<Specialization> getSpecialization(){
         Specialization specialization1 = Specialization.builder()

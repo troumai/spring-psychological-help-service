@@ -1,7 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
 import lombok.*;
+import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Scope(value = "prototype")
 public class TherapySession implements Serializable {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +37,16 @@ public class TherapySession implements Serializable {
 
     private LocalDate sessionDate;
     private LocalTime sessionTime;
+
+    @PostConstruct
+    public void doInit(){
+        System.out.println("----------TherapySession bean init-------------");
+    }
+
+    @PreDestroy
+    public void doDestroy(){
+        System.out.println("----------TherapySession bean destroy-------------");
+    }
 
     public static List<TherapySession> getTherapySessions(){
         TherapySession therapySession1 = TherapySession.builder()

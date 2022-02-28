@@ -33,6 +33,14 @@ public class LoggingAspect {
         log.info("after - method name: " + methodName);
     }
 
+    @Pointcut("execution(* kz.iitu.itse1903.abimoldayeva.service.ClientService.createClientsFromList(..))")
+    public void createClientsMethod(){}
+
+    @After("createClientsMethod()")
+    public void logAfterCreateClientMethod(JoinPoint jp){
+        log.info("Clients successfully created");
+    }
+
     @Pointcut("execution(* kz.iitu.itse1903.abimoldayeva.service.TherapistService.getTherapistById(..))")
     public void callAtGetTherapistById(){}
 
@@ -47,10 +55,10 @@ public class LoggingAspect {
         return proceed;
     }
 
-    @AfterReturning(pointcut = "execution(* kz.iitu.itse1903.abimoldayeva.service.TherapistService.getTherapistsByExperience(..))", returning = "result")
-    public void logAfterReturning(JoinPoint joinPoint, Object result) {
-
-        log.info( "returned value: " + result.getClass().getTypeName());
-    }
+//    @AfterReturning(pointcut = "execution(* kz.iitu.itse1903.abimoldayeva.service.TherapistService.getTherapistsByExperience(..))", returning = "result")
+//    public void logAfterReturning(JoinPoint joinPoint, Object result) {
+//
+//        log.info( "returned value: " + result.getClass().getTypeName());
+//    }
 
 }

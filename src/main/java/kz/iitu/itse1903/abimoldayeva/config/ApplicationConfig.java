@@ -4,12 +4,10 @@ import kz.iitu.itse1903.abimoldayeva.database.Client;
 import kz.iitu.itse1903.abimoldayeva.database.Specialization;
 import kz.iitu.itse1903.abimoldayeva.database.Therapist;
 import kz.iitu.itse1903.abimoldayeva.database.TherapySession;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 
 @Configuration
+@EnableAspectJAutoProxy
 @PropertySource("classpath:application.properties")
 public class ApplicationConfig {
 
@@ -19,7 +17,9 @@ public class ApplicationConfig {
         return new Client();
     }
 
+
     @Bean(initMethod = "doInit", destroyMethod = "doDestroy", name = "therapist")
+
     public Therapist therapist(){
         return new Therapist();
     }

@@ -5,36 +5,39 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Arrays;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
-//@Entity
+@Entity
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Scope(value="singleton")
-public class Specialization {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "specialization_id")
+@Scope(value = "singleton")
+public class Specialization implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "specialization_id", nullable=false)
     private Long id;
     private String name;
 
-//    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Therapist> therapists;
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Therapist> therapists;
 
-//    public Specialization(String name) {
-//        this.name = name;
-////        therapists = new ArrayList<>();
-//    }
+    public Specialization(String name) {
+        this.name = name;
+        therapists = new ArrayList<>();
+    }
 
-//    public void addTherapist(Therapist therapist){
-//        therapist.setSpecialization(this);
-//        therapists.add(therapist);
-//    }
+    public void addTherapist(Therapist therapist){
+        therapist.setSpecialization(this);
+        therapists.add(therapist);
+    }
 
     @PostConstruct
     public void doInit(){
@@ -81,6 +84,15 @@ public class Specialization {
                 .id(7L)
                 .name("Anxiety")
                 .build();
+//
+//        specialization1.addTherapist(Therapist.getTherapists().get(0));
+//        specialization2.addTherapist(Therapist.getTherapists().get(1));
+//        specialization3.addTherapist(Therapist.getTherapists().get(2));
+//        specialization4.addTherapist(Therapist.getTherapists().get(3));
+//        specialization5.addTherapist(Therapist.getTherapists().get(4));
+//        specialization6.addTherapist(Therapist.getTherapists().get(5));
+//        specialization7.addTherapist(Therapist.getTherapists().get(6));
+//        specialization1.addTherapist(Therapist.getTherapists().get(7));
 
         return Arrays.asList(specialization1, specialization2, specialization3, specialization4,
                 specialization5, specialization6, specialization7);

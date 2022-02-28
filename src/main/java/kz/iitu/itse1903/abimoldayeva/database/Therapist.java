@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//@Entity
+@Entity
 @Builder
 @Setter
 @Getter
@@ -17,34 +19,40 @@ import java.util.List;
 @ToString
 @Scope(value = "singleton")
 public class Therapist {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "therapist_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "therapist_id", nullable=false)
     private Long id;
     private String firstName;
     private String lastName;
-    private String phone;
     private String email;
     private String city;
     private int age;
     private String sex;
-    private String about;
     private int experience;
-    private String degree;
-    private Long specialization_id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "specialization_id")
-//    private Specialization specialization;
-//
-//    @OneToMany(mappedBy = "therapist", cascade = CascadeType.ALL, orphanRemoval = true)
-     //private List<TherapySession> therapySessionList;
-//
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "specialization_id")
+    private Specialization specialization;
 
-//    public void addSession(TherapySession therapySession){
-//        therapySession.setTherapist(this);
-//        therapySessionList.add(therapySession);
-//    }
+    @OneToMany(mappedBy = "therapist", cascade = CascadeType.ALL, orphanRemoval = true)
+     private List<TherapySession> therapySessionList;
+
+    public Therapist(String firstName, String lastName, String email, String city, int age, String sex, int experience) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.city = city;
+        this.age = age;
+        this.sex = sex;
+        this.experience = experience;
+        this.therapySessionList = new ArrayList<>();
+    }
+
+    public void addTherapySession(TherapySession therapySession){
+        therapySession.setTherapist(this);
+        therapySessionList.add(therapySession);
+    }
 
     @PostConstruct
     public void doInit(){
@@ -61,15 +69,10 @@ public class Therapist {
                 .id(1L)
                 .firstName("Timothée")
                 .lastName("Chalamet")
-                .phone("877777777777")
                 .age(26)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(5)
-                .degree("bachelor")
                 .email("timothee@gmail.com")
                 .sex("male")
-                .specialization_id(1L)
                 .city("Almaty")
                 .build();
 
@@ -77,15 +80,10 @@ public class Therapist {
                 .id(2L)
                 .firstName("Zendaya")
                 .lastName("Coleman")
-                .phone("877777777777")
                 .age(23)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(2)
-                .degree("bachelor")
                 .email("zendaya@gmail.com")
                 .sex("female")
-                .specialization_id(2L)
                 .city("Moscow")
                 .build();
 
@@ -93,15 +91,10 @@ public class Therapist {
                 .id(3L)
                 .firstName("Tom")
                 .lastName("Holland")
-                .phone("877777777777")
                 .age(45)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(16)
-                .degree("master")
                 .email("tom@gmail.com")
                 .sex("male")
-                .specialization_id(3L)
                 .city("Tokyo")
                 .build();
 
@@ -109,15 +102,10 @@ public class Therapist {
                 .id(4L)
                 .firstName("Elena")
                 .lastName("Banderchuk")
-                .phone("877777777777")
                 .age(66)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(45)
-                .degree("bachelor")
                 .email("elena@gmail.com")
                 .sex("female")
-                .specialization_id(4L)
                 .city("Almaty")
                 .build();
 
@@ -125,15 +113,10 @@ public class Therapist {
                 .id(5L)
                 .firstName("Robert")
                 .lastName("De Niro")
-                .phone("877777777777")
                 .age(51)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(22)
-                .degree("master")
                 .email("robert@gmail.com")
                 .sex("male")
-                .specialization_id(5L)
                 .city("Moscow")
                 .build();
 
@@ -141,15 +124,10 @@ public class Therapist {
                 .id(6L)
                 .firstName("Marlon")
                 .lastName("Brando")
-                .phone("877777777777")
                 .age(23)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(1)
-                .degree("bachelor")
                 .email("marlon@gmail.com")
                 .sex("male")
-                .specialization_id(6L)
                 .city("Almaty")
                 .build();
 
@@ -157,15 +135,10 @@ public class Therapist {
                 .id(7L)
                 .firstName("Maryl")
                 .lastName("Streep")
-                .phone("877777777777")
                 .age(33)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(10)
-                .degree("master")
                 .email("maryl@gmail.com")
                 .sex("female")
-                .specialization_id(7L)
                 .city("Almaty")
                 .build();
 
@@ -173,17 +146,21 @@ public class Therapist {
                 .id(8L)
                 .firstName("Tom")
                 .lastName("Hanks")
-                .phone("877777777777")
                 .age(32)
-                .about("I help overcome depression, anxiety, panic disorder, apathy, stress. " +
-                        "I work in Gestalt Therapy research and usually use a variety of therapies.")
                 .experience(12)
-                .degree("bachelor")
                 .email("tom@gmail.com")
                 .sex("male")
-                .specialization_id(1L)
                 .city("Almaty")
                 .build();
+
+//        therapist1.addTherapySession(TherapySession.getTherapySessions().get(0));
+//        therapist2.addTherapySession(TherapySession.getTherapySessions().get(1));
+//        therapist3.addTherapySession(TherapySession.getTherapySessions().get(2));
+//        therapist4.addTherapySession(TherapySession.getTherapySessions().get(3));
+//        therapist5.addTherapySession(TherapySession.getTherapySessions().get(4));
+//        therapist6.addTherapySession(TherapySession.getTherapySessions().get(5));
+//        therapist7.addTherapySession(TherapySession.getTherapySessions().get(6));
+//        therapist8.addTherapySession(TherapySession.getTherapySessions().get(7));
 
         return Arrays.asList(therapist1, therapist2, therapist3, therapist4, therapist5,
                 therapist6, therapist7, therapist8);

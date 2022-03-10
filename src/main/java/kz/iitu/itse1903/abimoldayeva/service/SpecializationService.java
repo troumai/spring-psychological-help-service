@@ -1,25 +1,37 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
+import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Specialization;
-import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepositoryImpl;
+import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SpecializationService {
-    //DI by field injection
+
     @Autowired
-    private SpecializationRepositoryImpl specializationRepositoryImpl;
+    private SpecializationRepository specializationRepository;
 
     public List<Specialization> getAllSpecializations(){
-        return specializationRepositoryImpl.findAllSpecialization();
+        return specializationRepository.findAll();
     }
 
-    public Optional<Specialization> getSpecializationById(Long id){
-        return specializationRepositoryImpl.findSpecializationById(id);
+    public Specialization getSpecializationById(Long id){
+        return specializationRepository.findById(id).get();
     }
+
+    public void saveSpecialization(Specialization specialization){
+        specializationRepository.save(specialization);
+    }
+
+    public Specialization updateSpecialization(Long specializationId, Specialization specialization){
+        return specializationRepository.findById(specializationId).map(specializationUpdate -> {
+            specializationUpdate.setName(specialization.getName());
+            return specializationRepository.save(specializationUpdate);
+        }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
+    }
+
 
 }

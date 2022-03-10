@@ -1,32 +1,34 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
+import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Therapist;
-import kz.iitu.itse1903.abimoldayeva.repository.TherapistRepositoryImpl;
+import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
+import kz.iitu.itse1903.abimoldayeva.repository.TherapistRepository;
+import kz.iitu.itse1903.abimoldayeva.repository.TherapySessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TherapistService {
-    private TherapistRepositoryImpl therapistRepositoryImpl;
-
-    //DI by constructor
     @Autowired
-    public TherapistService(TherapistRepositoryImpl therapistRepositoryImpl) {
-        this.therapistRepositoryImpl = therapistRepositoryImpl;
-    }
+    private TherapistRepository therapistRepository;
+    @Autowired
+    private SpecializationRepository specializationRepository;
 
     public List<Therapist> getAllTherapists(){
-        return therapistRepositoryImpl.findAllTherapists();
+        return therapistRepository.findAll();
     }
 
-    public Optional<Therapist> getTherapistById(Long id){
-        return therapistRepositoryImpl.findTherapistById(id);
+    public Therapist getTherapistById(Long id){
+        return therapistRepository.getById(id);
     }
 
-    public Optional<List<Therapist>> getTherapistsByExperience(int experience){
-        return therapistRepositoryImpl.findTherapistByExperience(experience);
+    public Therapist saveTherapist(Therapist therapist, Long specializationId){
+        return specializationRepository.findById(specializationId).map(specialization -> {
+            therapist.setSpecialization(specialization);
+            return therapistRepository.save(therapist);
+        }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
     }
 }

@@ -5,10 +5,11 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Arrays;
-import java.util.List;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-//@Entity
+@Entity
 @Builder
 @Setter
 @Getter
@@ -17,20 +18,23 @@ import java.util.List;
 @ToString
 @Scope(value="singleton")
 public class Specialization {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "specialization_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "specialization_id")
     private Long id;
+
+    @Column(name = "specialization_name")
     private String name;
 
-//    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Therapist> therapists;
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Therapist> therapists = new HashSet<>();
 
 //    public Specialization(String name) {
 //        this.name = name;
-////        therapists = new ArrayList<>();
+//        therapists = new ArrayList<>();
 //    }
-
+//
 //    public void addTherapist(Therapist therapist){
 //        therapist.setSpecialization(this);
 //        therapists.add(therapist);
@@ -46,45 +50,6 @@ public class Specialization {
         System.out.println("----------Specialization bean destroy-------------");
     }
 
-    public static List<Specialization> getSpecialization(){
-        Specialization specialization1 = Specialization.builder()
-                .id(1L)
-                .name("Family")
-                .build();
-
-        Specialization specialization2 = Specialization.builder()
-                .id(2L)
-                .name("Stress")
-                .build();
-
-        Specialization specialization3 = Specialization.builder()
-                .id(3L)
-                .name("Burnout")
-                .build();
-
-        Specialization specialization4 = Specialization.builder()
-                .id(4L)
-                .name("Relationships")
-                .build();
-
-        Specialization specialization5 = Specialization.builder()
-                .id(5L)
-                .name("Motivation")
-                .build();
-
-        Specialization specialization6 = Specialization.builder()
-                .id(6L)
-                .name("Depression")
-                .build();
-
-        Specialization specialization7 = Specialization.builder()
-                .id(7L)
-                .name("Anxiety")
-                .build();
-
-        return Arrays.asList(specialization1, specialization2, specialization3, specialization4,
-                specialization5, specialization6, specialization7);
-    }
 
 
 }

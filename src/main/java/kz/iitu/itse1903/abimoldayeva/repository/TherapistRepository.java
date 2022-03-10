@@ -1,12 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.repository;
 
 import kz.iitu.itse1903.abimoldayeva.database.Therapist;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+@Repository
+public interface TherapistRepository extends JpaRepository<Therapist, Long> {
 
-public interface TherapistRepository {
-    List<Therapist> findAllTherapists();
-    Optional<Therapist> findTherapistById(Long id);
-    Optional<List<Therapist>> findTherapistByExperience(int experience);
 }

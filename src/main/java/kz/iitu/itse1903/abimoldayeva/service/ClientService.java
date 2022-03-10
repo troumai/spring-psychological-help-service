@@ -1,32 +1,42 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
+import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Client;
-import kz.iitu.itse1903.abimoldayeva.repository.ClientRepositoryImpl;
+import kz.iitu.itse1903.abimoldayeva.repository.ClientRepository;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClientService {
-    private ClientRepositoryImpl clientRepositoryImpl;
-
-    //DI by Setter
     @Autowired
-    public void setClientRepositoryImpl(ClientRepositoryImpl clientRepositoryImpl) {
-        this.clientRepositoryImpl = clientRepositoryImpl;
+    private ClientRepository clientRepository;
+
+    public void saveClient(Client client){
+        clientRepository.save(client);
     }
 
     public List<Client> getAllClients(){
-        return clientRepositoryImpl.findAllClients();
+        return clientRepository.findAll();
     }
 
-    public Optional<Client> getClientById(Long id){
-        return clientRepositoryImpl.findClientById(id);
+    public Client getClientById(Long id){
+        return clientRepository.findById(id).get();
     }
 
-    public Optional<Client> getClientByLastName(String lastname){
-        return clientRepositoryImpl.findClientByLastName(lastname);
+    public Client updateClient(Long clientId, Client client){
+        return clientRepository.findById(clientId).map(clientUpdate -> {
+            clientUpdate.setAge(client.getAge());
+            clientUpdate.setEmail(client.getEmail());
+            clientUpdate.setCity(client.getCity());
+            clientUpdate.setFirstName(client.getFirstName());
+            clientUpdate.setLastName(client.getLastName());
+            clientUpdate.setSex(client.getSex());
+            return clientRepository.save(clientUpdate);
+        }).orElseThrow(() -> new ResourceNotFoundException("Client id = " + clientId + " not found"));
     }
+
 }

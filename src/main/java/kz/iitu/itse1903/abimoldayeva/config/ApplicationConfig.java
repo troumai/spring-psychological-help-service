@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 public class ApplicationConfig {
 
     @Bean(initMethod = "doInit", destroyMethod = "doDestroy", name = "client")
-    @DependsOn("therapist")
     public Client client(){
         return new Client();
     }
@@ -25,6 +24,7 @@ public class ApplicationConfig {
     }
 
     @Bean(initMethod = "doInit", destroyMethod = "doDestroy", name = "specialization")
+    @DependsOn("client")
     public Specialization specialization(){
         return new Specialization();
     }

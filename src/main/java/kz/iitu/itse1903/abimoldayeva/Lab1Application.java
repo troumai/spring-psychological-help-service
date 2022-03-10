@@ -1,12 +1,19 @@
 package kz.iitu.itse1903.abimoldayeva;
 
 import kz.iitu.itse1903.abimoldayeva.config.ClientConfig;
+import kz.iitu.itse1903.abimoldayeva.config.SpecializationConfig;
 import kz.iitu.itse1903.abimoldayeva.config.TherapistConfig;
+import kz.iitu.itse1903.abimoldayeva.config.TherapySessionConfig;
 import kz.iitu.itse1903.abimoldayeva.database.Client;
+import kz.iitu.itse1903.abimoldayeva.repository.ClientRepository;
+import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
+import kz.iitu.itse1903.abimoldayeva.repository.TherapistRepository;
+import kz.iitu.itse1903.abimoldayeva.repository.TherapySessionRepository;
 import kz.iitu.itse1903.abimoldayeva.service.ClientService;
 import kz.iitu.itse1903.abimoldayeva.service.SpecializationService;
 import kz.iitu.itse1903.abimoldayeva.service.TherapistService;
 import kz.iitu.itse1903.abimoldayeva.service.TherapySessionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,11 +30,13 @@ import java.util.Optional;
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 @EnableAutoConfiguration
 @ComponentScan
-@Import({ClientConfig.class, TherapistConfig.class})
+@Import({TherapySessionConfig.class, TherapistConfig.class, SpecializationConfig.class, ClientConfig.class,})
 public class Lab1Application {
     private static ApplicationContext applicationContext;
 
+
     public static void main(String[] args) {
+
         applicationContext = SpringApplication.run(Lab1Application.class, args);
         //ApplicationContext applicationContext = new ClassPathXmlApplicationContext("context.xml");
 

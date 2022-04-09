@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class TherapySessionConfig {
@@ -21,21 +22,15 @@ public class TherapySessionConfig {
     @Autowired
     private TherapySessionService therapySessionService;
 
-    @Autowired
-    private ClientService clientService;
-
-    @Autowired
-    private TherapistService therapistService;
-
     @Bean
     @Lazy
     public void createTherapySession(){
         System.out.println("------------1.create sessions-----------");
         TherapySession therapySession = new TherapySession(LocalDate.parse("2022-01-03"), LocalTime.parse("15:00"));
-        therapySessionService.saveTherapySession(1L, 1L, therapySession);
+        therapySessionService.saveTherapySession(4L, 4L, therapySession);
     }
 
-    @Bean("allTherapySession")
+    @Bean
     public void allTherapySessions(){
         System.out.println("------------1.All sessions-----------");
         therapySessionService.getAllTherapySessions().stream().forEach(
@@ -43,10 +38,28 @@ public class TherapySessionConfig {
                         +therapySession.getClient().getId() + " "
                         +therapySession.getTherapist().getId()
                 ));
-//        List<Client> clients = clientService.getAllClients();
-//        clients.stream().forEach(client -> client.addTherapySession(therapySessions.stream().filter(
-//                therapySession -> therapySession.getClient().getId().equals(client.getId())).findFirst().get()));
-//        clients.forEach(client -> clientService.saveClients(client));
+    }
+
+    @Bean
+    public void getTherapySessionByDate(){
+        Optional<List<TherapySession>> therapySessionList = therapySessionService
+                .getTherapySessionByDate(LocalDate.parse("2022-03-03"));
+        therapySessionList.get().forEach(therapySession -> System.out.println(
+                therapySession.getId() + " " +
+                        therapySession.getSessionTime()));
+    }
+
+    @Bean
+    public void updateTherapySessionDate(){
+        System.out.println("\n------------3.Update therapy session date-----------");
+        System.out.println("Before updating: ");
+        therapySessionService.getTherapySessionByDate(LocalDate.parse("2022-03-11")).get()
+                .forEach(therapySession -> System.out.println(therapySession.getId() + " " + therapySession.getSessionDate()));
+        therapySessionService.updateTherapySessionDate(2L, LocalDate.parse("2022-03-12"));
+        System.out.println("After updating: ");
+        therapySessionService.getTherapySessionByDate(LocalDate.parse("2022-03-12")).get()
+                .forEach(therapySession -> System.out.println(therapySession.getId() + " " + therapySession.getSessionDate()));
+
     }
 
 }

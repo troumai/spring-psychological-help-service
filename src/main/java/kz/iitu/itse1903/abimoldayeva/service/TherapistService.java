@@ -8,9 +8,11 @@ import kz.iitu.itse1903.abimoldayeva.repository.TherapySessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class TherapistService {
     @Autowired
     private TherapistRepository therapistRepository;
@@ -28,7 +30,17 @@ public class TherapistService {
     public Therapist saveTherapist(Therapist therapist, Long specializationId){
         return specializationRepository.findById(specializationId).map(specialization -> {
             therapist.setSpecialization(specialization);
-            return therapistRepository.save(therapist);
+            return therapistRepository.saveAndFlush(therapist);
         }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
+    }
+
+    public Therapist updateTherapistEmail(Long id, String email){
+        Therapist therapist = therapistRepository.getById(id);
+        therapist.setEmail(email);
+        return therapistRepository.save(therapist);
+    }
+
+    public void deleteTherapist(Long id){
+        therapistRepository.deleteById(id);
     }
 }

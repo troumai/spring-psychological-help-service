@@ -22,9 +22,9 @@ public class TherapistConfig {
                 .city("Almaty")
                 .age(44)
                 .experience(6)
-                .email("therapist@gmail.com")
-                .firstName("John")
-                .lastName("Legend")
+                .email("new@gmail.com")
+                .firstName("New")
+                .lastName("Therapist")
                 .sex("male")
                 .build();
         therapistService.saveTherapist(therapist, 1L);
@@ -52,5 +52,8 @@ public class TherapistConfig {
 //                .forEach(therapist -> System.out.println(therapist.getFirstName()
 //                        + "'s experience: " + therapist.getExperience() + " years"));
 //    }
+
+
+
 
 }

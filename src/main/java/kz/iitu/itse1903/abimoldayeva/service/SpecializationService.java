@@ -6,31 +6,45 @@ import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class SpecializationService {
 
     @Autowired
     private SpecializationRepository specializationRepository;
 
+    @Transactional
     public List<Specialization> getAllSpecializations(){
         return specializationRepository.findAll();
     }
 
-    public Specialization getSpecializationById(Long id){
-        return specializationRepository.findById(id).get();
+    public Optional<Specialization> getSpecializationById(Long id){
+        return specializationRepository.findById(id);
     }
 
     public void saveSpecialization(Specialization specialization){
-        specializationRepository.save(specialization);
+        specializationRepository.saveAndFlush(specialization);
     }
 
     public Specialization updateSpecialization(Long specializationId, Specialization specialization){
         return specializationRepository.findById(specializationId).map(specializationUpdate -> {
             specializationUpdate.setName(specialization.getName());
-            return specializationRepository.save(specializationUpdate);
+            return specializationRepository.saveAndFlush(specializationUpdate);
         }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
+    }
+
+    public Specialization updateSpecializationName(Long id, String name){
+        Specialization specialization = specializationRepository.getById(id);
+        specialization.setName(name);
+        return specializationRepository.saveAndFlush(specialization);
+    }
+
+    public void deleteSpecialization(Long id){
+        specializationRepository.deleteById(id);
     }
 
 

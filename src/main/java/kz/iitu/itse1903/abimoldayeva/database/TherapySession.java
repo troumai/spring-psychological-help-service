@@ -1,6 +1,7 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
@@ -18,10 +19,11 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @ToString
 @Scope(value = "singleton")
-public class TherapySession implements Serializable {
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class TherapySession extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "therapy_session_id")
+    @Column(name = "session_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

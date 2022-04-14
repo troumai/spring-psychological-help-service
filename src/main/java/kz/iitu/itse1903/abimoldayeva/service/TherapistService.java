@@ -1,10 +1,9 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
-import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Therapist;
+import kz.iitu.itse1903.abimoldayeva.exception.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
 import kz.iitu.itse1903.abimoldayeva.repository.TherapistRepository;
-import kz.iitu.itse1903.abimoldayeva.repository.TherapySessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +13,14 @@ import java.util.List;
 @Service
 @Transactional
 public class TherapistService {
+    private final TherapistRepository therapistRepository;
+    private final SpecializationRepository specializationRepository;
+
     @Autowired
-    private TherapistRepository therapistRepository;
-    @Autowired
-    private SpecializationRepository specializationRepository;
+    public TherapistService(TherapistRepository therapistRepository, SpecializationRepository specializationRepository) {
+        this.therapistRepository = therapistRepository;
+        this.specializationRepository = specializationRepository;
+    }
 
     public List<Therapist> getAllTherapists(){
         return therapistRepository.findAll();
@@ -27,7 +30,7 @@ public class TherapistService {
         return therapistRepository.getById(id);
     }
 
-    public Therapist saveTherapist(Therapist therapist, Long specializationId){
+    public Therapist saveTherapist(Therapist therapist, Long specializationId) throws ResourceNotFoundException {
         return specializationRepository.findById(specializationId).map(specialization -> {
             therapist.setSpecialization(specialization);
             return therapistRepository.saveAndFlush(therapist);

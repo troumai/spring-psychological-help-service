@@ -1,4 +1,4 @@
-package kz.iitu.itse1903.abimoldayeva.formatter;
+package kz.iitu.itse1903.abimoldayeva.validation.formatter;
 
 import org.springframework.format.Formatter;
 

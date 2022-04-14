@@ -1,5 +1,6 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.context.annotation.Scope;
@@ -26,10 +27,12 @@ public class TherapySession extends Auditable<String> implements Serializable {
     @Column(name = "session_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "therapist_id")
     private Therapist therapist;

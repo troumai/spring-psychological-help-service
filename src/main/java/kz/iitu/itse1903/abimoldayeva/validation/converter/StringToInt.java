@@ -1,4 +1,4 @@
-package kz.iitu.itse1903.abimoldayeva.converter;
+package kz.iitu.itse1903.abimoldayeva.validation.converter;
 
 import kz.iitu.itse1903.abimoldayeva.database.Client;
 import org.springframework.core.convert.converter.Converter;

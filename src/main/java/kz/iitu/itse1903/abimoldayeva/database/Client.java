@@ -1,5 +1,6 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kz.iitu.itse1903.abimoldayeva.validation.EmailCheck;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -10,9 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,8 +27,6 @@ import java.util.Set;
 @NamedQuery(name = "Client.findByEmail",
         query = "select c from Client c where c.email = ?1")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EmailCheck
-@Validated
 public class Client extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,41 +36,41 @@ public class Client extends Auditable<String> implements Serializable {
     @Pattern(message = "Bad formed name: ${validatedValue}",
             regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+\\')?[A-Z][a-z]*)))*$")
     @Length(min = 2)
-    @NotNull
+    @NotNull(message = "user firstname shouldn't be null")
     private String firstName;
 
     @Pattern(message = "Bad formed lastname: ${validatedValue}",
             regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+\\')?[A-Z][a-z]*)))*$")
     @Length(min = 2)
-    @NotNull
+    @NotNull(message = "user lastname shouldn't be null")
     private String lastName;
 
+    @Email
+    @NotNull(message = "user email shouldn't be null")
     private String email;
 
     private String city;
 
-    @NotNull
+    @NotNull(message = "user age shouldn't be null")
+    @Min(5)
+    @Max(100)
     private int age;
 
-    @NotNull
+    @NotNull(message = "user sex shouldn't be null")
     private String sex;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TherapySession> therapySessions = new HashSet<>();
 
-    @AssertTrue(message = "Error! Client should have email and city defined")
-    public boolean isClientFemale(){
-        boolean result = true;
-
-        if(sex!=null &&
-                (sex.equals("female") &&
-                        email==null || city==null))
-            result = false;
-
-        return result;
+    public Client(String firstName, String lastName, String email, String city, int age, String sex) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.city = city;
+        this.age = age;
+        this.sex = sex;
     }
-
 
     @PostConstruct
     public void doInit(){

@@ -1,6 +1,5 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
-import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Client;
 import kz.iitu.itse1903.abimoldayeva.database.Therapist;
 import kz.iitu.itse1903.abimoldayeva.database.TherapySession;
@@ -19,12 +18,17 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TherapySessionService {
+
+    private final TherapySessionRepository therapySessionRepository;
+    private final ClientRepository clientRepository;
+    private final TherapistRepository therapistRepository;
+
     @Autowired
-    private TherapySessionRepository therapySessionRepository;
-    @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private TherapistRepository therapistRepository;
+    public TherapySessionService(TherapySessionRepository therapySessionRepository, ClientRepository clientRepository, TherapistRepository therapistRepository) {
+        this.therapySessionRepository = therapySessionRepository;
+        this.clientRepository = clientRepository;
+        this.therapistRepository = therapistRepository;
+    }
 
     public List<TherapySession> getAllTherapySessions(){
         return therapySessionRepository.findAll();

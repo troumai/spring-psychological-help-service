@@ -23,7 +23,6 @@ public class LoggingAspect {
                 .map(a -> a.toString())
                 .collect(Collectors.joining(","));
         log.info("before " + jp + ", args=[" + args + "]");
-
     }
 
     @After("callAtAllClientMethods()")

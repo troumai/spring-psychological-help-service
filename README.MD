@@ -19,3 +19,6 @@ suitable psychologist and to schedule a session with him.
   and their sessions;
 * Managers can manage therapists specializations.
 
+**Swagger:**
+  http://localhost:8080/swagger-ui/
+

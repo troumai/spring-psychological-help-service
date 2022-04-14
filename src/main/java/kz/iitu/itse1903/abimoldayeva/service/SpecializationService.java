@@ -1,7 +1,7 @@
 package kz.iitu.itse1903.abimoldayeva.service;
 
-import kz.iitu.itse1903.abimoldayeva.aop.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.database.Specialization;
+import kz.iitu.itse1903.abimoldayeva.exception.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,12 @@ import java.util.Optional;
 @Transactional
 public class SpecializationService {
 
+    private final SpecializationRepository specializationRepository;
+
     @Autowired
-    private SpecializationRepository specializationRepository;
+    public SpecializationService(SpecializationRepository specializationRepository) {
+        this.specializationRepository = specializationRepository;
+    }
 
     @Transactional
     public List<Specialization> getAllSpecializations(){
@@ -30,7 +34,7 @@ public class SpecializationService {
         specializationRepository.saveAndFlush(specialization);
     }
 
-    public Specialization updateSpecialization(Long specializationId, Specialization specialization){
+    public Specialization updateSpecialization(Long specializationId, Specialization specialization) throws ResourceNotFoundException {
         return specializationRepository.findById(specializationId).map(specializationUpdate -> {
             specializationUpdate.setName(specialization.getName());
             return specializationRepository.saveAndFlush(specializationUpdate);

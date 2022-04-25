@@ -1,5 +1,6 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +30,7 @@ public class Specialization extends Auditable<String> implements Serializable {
     @Column(name = "specialization_name")
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Therapist> therapists = new HashSet<>();
@@ -43,6 +45,12 @@ public class Specialization extends Auditable<String> implements Serializable {
 //        therapists.add(therapist);
 //    }
 
+
+    public Specialization(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @PostConstruct
     public void doInit(){
         System.out.println("----------Specialization bean init-------------");
@@ -52,7 +60,5 @@ public class Specialization extends Auditable<String> implements Serializable {
     public void doDestroy(){
         System.out.println("----------Specialization bean destroy-------------");
     }
-
-
 
 }

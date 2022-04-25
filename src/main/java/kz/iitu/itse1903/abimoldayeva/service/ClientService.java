@@ -25,8 +25,8 @@ public class ClientService {
     }
 
     @Transactional
-    public void saveClient(Client client){
-        clientRepository.saveAndFlush(client);
+    public Client saveClient(Client client){
+        return clientRepository.saveAndFlush(client);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
@@ -43,32 +43,6 @@ public class ClientService {
             throw new ResourceNotFoundException("Client with id = " + id + " not found");
         }
     }
-
-//    @Transactional(propagation = Propagation.REQUIRES_NEW)
-//    public Client getClientByName(String name){
-//        return clientRepository.findClientByFirstName(name);
-//    }
-//
-//    @Transactional(rollbackForClassName = {"NullpointerException"})
-//    public Client getClientByEmail(String email){
-//        return clientRepository.findByEmail(email);
-//    }
-//
-//    public Client getClientByCity(String city){
-//        return clientRepository.findByCity(city);
-//    }
-//
-//    public Client updateClient(Long clientId, Client client) throws UserNotFoundException{
-//        return clientRepository.findById(clientId).map(clientUpdate -> {
-//            clientUpdate.setAge(client.getAge());
-//            clientUpdate.setEmail(client.getEmail());
-//            clientUpdate.setCity(client.getCity());
-//            clientUpdate.setFirstName(client.getFirstName());
-//            clientUpdate.setLastName(client.getLastName());
-//            clientUpdate.setSex(client.getSex());
-//            return clientRepository.saveAndFlush(clientUpdate);
-//        }).orElseThrow(() -> new UserNotFoundException("Client id = " + clientId + " not found"));
-//    }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public Client updateClientsEmail(Long id, String email){

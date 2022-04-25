@@ -37,6 +37,7 @@ public class TherapySessionService {
     public TherapySession getTherapySessionById(Long id){
         return therapySessionRepository.getById(id);
     }
+
     public TherapySession saveTherapySession(Long clientId, Long therapistId, TherapySession therapySession){
         Client client = clientRepository.findById(clientId).get();
         Therapist therapist = therapistRepository.getById(therapistId);

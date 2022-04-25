@@ -30,16 +30,16 @@ public class SpecializationService {
         return specializationRepository.findById(id);
     }
 
-    public void saveSpecialization(Specialization specialization){
-        specializationRepository.saveAndFlush(specialization);
+    public Specialization saveSpecialization(Specialization specialization){
+        return specializationRepository.saveAndFlush(specialization);
     }
 
-    public Specialization updateSpecialization(Long specializationId, Specialization specialization) throws ResourceNotFoundException {
-        return specializationRepository.findById(specializationId).map(specializationUpdate -> {
-            specializationUpdate.setName(specialization.getName());
-            return specializationRepository.saveAndFlush(specializationUpdate);
-        }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
-    }
+//    public Specialization updateSpecialization(Long specializationId, Specialization specialization) throws ResourceNotFoundException {
+//        return specializationRepository.findById(specializationId).map(specializationUpdate -> {
+//            specializationUpdate.setName(specialization.getName());
+//            return specializationRepository.saveAndFlush(specializationUpdate);
+//        }).orElseThrow(() -> new ResourceNotFoundException("Specialization id = " + specializationId + " not found"));
+//    }
 
     public Specialization updateSpecializationName(Long id, String name){
         Specialization specialization = specializationRepository.getById(id);

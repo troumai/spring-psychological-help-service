@@ -45,6 +45,12 @@ public class TherapySession extends Auditable<String> implements Serializable {
         this.sessionTime = sessionTime;
     }
 
+    public TherapySession(Long id, LocalDate sessionDate, LocalTime sessionTime) {
+        this.id = id;
+        this.sessionDate = sessionDate;
+        this.sessionTime = sessionTime;
+    }
+
     @PostConstruct
     public void doInit(){
         System.out.println("----------TherapySession bean init-------------");
@@ -54,7 +60,4 @@ public class TherapySession extends Auditable<String> implements Serializable {
     public void doDestroy(){
         System.out.println("----------TherapySession bean destroy-------------");
     }
-
-
-
 }

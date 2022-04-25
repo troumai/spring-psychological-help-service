@@ -1,15 +1,10 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import kz.iitu.itse1903.abimoldayeva.validation.EmailCheck;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.context.annotation.Scope;
-import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -22,7 +17,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Scope(value = "singleton")
 @NamedQuery(name = "Client.findByEmail",
         query = "select c from Client c where c.email = ?1")
@@ -71,15 +65,4 @@ public class Client extends Auditable<String> implements Serializable {
         this.age = age;
         this.sex = sex;
     }
-
-    @PostConstruct
-    public void doInit(){
-        System.out.println("----------Client bean init-------------");
-    }
-
-    @PreDestroy
-    public void doDestroy(){
-        System.out.println("----------Client bean destroy-------------");
-    }
-
 }

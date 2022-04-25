@@ -38,6 +38,7 @@ public class Therapist extends Auditable<String> implements Serializable {
     @JoinColumn(name = "specialization_id")
     private Specialization specialization;
 
+
     @OneToMany(mappedBy = "therapist", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
      private Set<TherapySession> therapySessionList = new HashSet<>();
@@ -58,6 +59,19 @@ public class Therapist extends Auditable<String> implements Serializable {
 //        therapySession.setTherapist(this);
 //        therapySessionList.add(therapySession);
 //    }
+
+
+    public Therapist(Long id, String firstName, String lastName, String email, String city, int age, String sex, int experience, Specialization specialization) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.city = city;
+        this.age = age;
+        this.sex = sex;
+        this.experience = experience;
+        this.specialization = specialization;
+    }
 
     @PostConstruct
     public void doInit(){

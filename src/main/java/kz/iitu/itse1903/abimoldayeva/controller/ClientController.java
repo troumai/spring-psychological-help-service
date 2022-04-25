@@ -3,6 +3,8 @@ package kz.iitu.itse1903.abimoldayeva.controller;
 import kz.iitu.itse1903.abimoldayeva.database.Client;
 import kz.iitu.itse1903.abimoldayeva.exception.ResourceNotFoundException;
 import kz.iitu.itse1903.abimoldayeva.service.ClientService;
+import kz.iitu.itse1903.abimoldayeva.service.KafkaProducerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +19,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/client")
 @Slf4j
+@RequiredArgsConstructor
 public class ClientController {
-    private final ClientService clientService;
 
-    @Autowired
-    public ClientController(ClientService clientService) {
-        this.clientService = clientService;
-    }
+    private final ClientService clientService;
+    private final KafkaProducerService producer;
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
@@ -33,7 +33,7 @@ public class ClientController {
 
     @PostMapping("/createClient")
     @ResponseBody
-    public ResponseEntity<String> createClient(@Valid @ModelAttribute Client client){
+    public ResponseEntity<String> createClient(@Valid @ModelAttribute("clientEntity") Client client){
         try{
             clientService.saveClient(new Client(
                     client.getFirstName(),
@@ -72,19 +72,6 @@ public class ClientController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @GetMapping("/listHeaders")
-    public ResponseEntity<String> listAllHeaders(@RequestHeader Map<String, String> headers) {
-        headers.forEach((key, value) -> log.info(String.format("Header '%s' = %s", key, value)));
-
-        return new ResponseEntity<>(
-                String.format("Listed %d headers", headers.size()), HttpStatus.OK);
-    }
-
-    @GetMapping("/{pageNo}/{pageSize}")
-    public ResponseEntity<List<Client>> getPaginated(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize) {
-        return new ResponseEntity<>(clientService.findPaginated(pageNo, pageSize), HttpStatus.OK);
     }
 
 

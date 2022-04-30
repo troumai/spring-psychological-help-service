@@ -1,6 +1,5 @@
 package kz.iitu.itse1903.abimoldayeva.exception;
 
-import kz.iitu.itse1903.abimoldayeva.message.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,10 +27,10 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         return new ResponseEntity<ApiErrorResponse>(response, HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ResponseMessage> handleMaxSizeException(MaxUploadSizeExceededException ex){
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("File too large!"));
-    }
+//
+//    @ExceptionHandler(MaxUploadSizeExceededException.class)
+//    public ResponseEntity<ResponseMessage> handleMaxSizeException(MaxUploadSizeExceededException ex){
+//        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("File too large!"));
+//    }
 
 }

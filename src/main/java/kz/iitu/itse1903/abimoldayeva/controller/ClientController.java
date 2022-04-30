@@ -6,17 +6,23 @@ import kz.iitu.itse1903.abimoldayeva.service.ClientService;
 import kz.iitu.itse1903.abimoldayeva.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping(value = "/client")
 @Slf4j
 @RequiredArgsConstructor
@@ -25,16 +31,25 @@ public class ClientController {
     private final ClientService clientService;
     private final KafkaProducerService producer;
 
-    @GetMapping("/getAll")
+    @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
-    public List<Client> getAllClients(){
-        return clientService.getAllClients();
+    public String getAllClients(Model model){
+        List<Client> clients = clientService.getAllClients();
+        model.addAttribute("clients", clients);
+        return "index";
+    }
+
+    @GetMapping("/signup")
+    public String showSignUpForm(Client client){
+        return "add-client";
     }
 
     @PostMapping("/createClient")
     @ResponseBody
-    public ResponseEntity<String> createClient(@Valid @ModelAttribute("clientEntity") Client client){
-        try{
+    public ModelAndView createClient(@Valid @ModelAttribute("clientEntity") Client client, BindingResult result, ModelMap model){
+        if(result.hasErrors()){
+            return new ModelAndView("redirect:/client/signup", model);
+        }else {
             clientService.saveClient(new Client(
                     client.getFirstName(),
                     client.getLastName(),
@@ -42,37 +57,37 @@ public class ClientController {
                     client.getCity(),
                     client.getAge(),
                     client.getSex()));
-            return new ResponseEntity<>("Client created", HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ModelAndView("redirect:/client/list", model);
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable("id") long id) throws ResourceNotFoundException {
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Client> getClientById(@PathVariable("id") long id) throws ResourceNotFoundException {
+//        Optional<Client> client = clientService.getClientById(id);
+//        return new ResponseEntity<>(client.get(), HttpStatus.OK);
+//    }
+
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable("id") long id, Model model) throws ResourceNotFoundException {
         Optional<Client> client = clientService.getClientById(id);
-        return new ResponseEntity<>(client.get(), HttpStatus.OK);
+        model.addAttribute("client", client.get());
+        return "update-client";
     }
 
-    @PutMapping("/{id}/update")
-    @ResponseBody
-    public ResponseEntity<Client> updateClientEmail(@PathVariable("id") long id, @RequestParam String email) throws ResourceNotFoundException {
-        Optional<Client> client1 = clientService.getClientById(id);
-        if(client1.isPresent()){
-            client1 = Optional.of(clientService.updateClientsEmail(id, email));
-            return new ResponseEntity<>(client1.get(), HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PostMapping("/update/{id}")
+    @ResponseStatus
+    public String updateClientEmail(@PathVariable("id") long id,
+                                          @RequestParam("email") String email,  ModelMap model) throws ResourceNotFoundException {
+        clientService.updateClientsEmail(id, email);
+//        return new ModelAndView("redirect:/client/list", model);
+        model.addAttribute("clients", clientService.getAllClients());
+        return "index";
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deleteClient(@PathVariable("id") long id){
-        try{
-            clientService.deleteClient(id);
-            return new ResponseEntity<>("Client with id: " + id + " successfully deleted", HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("/delete/{id}")
+    public String deleteClient(@PathVariable("id") long id, ModelMap model){
+        clientService.deleteClient(id);
+        model.addAttribute("clients", clientService.getAllClients());
+        return "index";
     }
-
-
 }

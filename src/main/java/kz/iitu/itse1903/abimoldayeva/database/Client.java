@@ -1,5 +1,6 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
@@ -21,7 +22,7 @@ import java.util.Set;
 @NamedQuery(name = "Client.findByEmail",
         query = "select c from Client c where c.email = ?1")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Client extends Auditable<String> implements Serializable {
+public class Client extends Auditable<String> implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
@@ -55,6 +56,7 @@ public class Client extends Auditable<String> implements Serializable {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<TherapySession> therapySessions = new HashSet<>();
 
     public Client(String firstName, String lastName, String email, String city, int age, String sex) {

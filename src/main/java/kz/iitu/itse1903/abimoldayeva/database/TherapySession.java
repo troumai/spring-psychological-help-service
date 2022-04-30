@@ -1,5 +1,6 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,7 +28,7 @@ public class TherapySession extends Auditable<String> implements Serializable {
     @Column(name = "session_id")
     private Long id;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;

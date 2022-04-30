@@ -1,6 +1,7 @@
 package kz.iitu.itse1903.abimoldayeva.database;
 
-import kz.iitu.itse1903.abimoldayeva.validation.EmailCheck;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.context.annotation.Scope;
@@ -34,11 +35,13 @@ public class Therapist extends Auditable<String> implements Serializable {
     private String sex;
     private int experience;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialization_id")
     private Specialization specialization;
 
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "therapist", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
      private Set<TherapySession> therapySessionList = new HashSet<>();
